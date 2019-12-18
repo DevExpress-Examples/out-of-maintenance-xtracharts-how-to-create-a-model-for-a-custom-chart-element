@@ -2,7 +2,7 @@
 *Files to look at*:
 
 * **[MainForm.cs](./CS/CustomChartElementModel/MainForm.cs) (VB: [MainForm.vb](./VB/CustomChartElementModel/MainForm.vb))**
-* [CustomColorizerEditor.cs](./CS/CustomChartElementModel/CustomColorizerEditor.cs) (VB: [CustomLegendOptionsControl.vb](./VB/CustomChartElementModel/CustomColorizerEditor.vb))
+* [CustomColorizerEditor.cs](./CS/CustomChartElementModel/CustomColorizerEditor.cs) (VB: [CustomColorizerEditor.vb](./VB/CustomChartElementModel/CustomColorizerEditor.vb))
 <!-- default file list end -->
 
 # How to Create a Model for a Custom Chart Element

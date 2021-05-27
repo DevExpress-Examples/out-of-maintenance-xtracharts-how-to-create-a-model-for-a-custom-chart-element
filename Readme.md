@@ -1,7 +1,7 @@
 <!-- default file list -->
 *Files to look at*:
 
-* **[MainForm.cs](./CS/CustomChartElementModel/MainForm.cs) (VB: [MainForm.vb](./VB/CustomChartElementModel/MainForm.vb))**
+* **[Form1.cs](./CS/CustomChartElementModel/Form1.cs) (VB: [Form1.vb](./VB/CustomChartElementModel/Form1.vb))**
 * [CustomColorizerEditor.cs](./CS/CustomChartElementModel/CustomColorizerEditor.cs) (VB: [CustomColorizerEditor.vb](./VB/CustomChartElementModel/CustomColorizerEditor.vb))
 <!-- default file list end -->
 

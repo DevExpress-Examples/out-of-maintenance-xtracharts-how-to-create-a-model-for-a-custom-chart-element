@@ -1,4 +1,4 @@
-﻿Imports DevExpress.XtraCharts
+Imports DevExpress.XtraCharts
 Imports DevExpress.XtraCharts.Designer
 Imports DevExpress.XtraEditors
 Imports System
@@ -9,52 +9,51 @@ Imports System.Windows.Forms.Design
 Imports CustomChartElementModel.Form1
 
 Namespace CustomChartElementModel
-	Public Class CustomColorizerEditor
-		Inherits UITypeEditor
 
-		Private editorService As IWindowsFormsEditorService
-		Public Overrides Function EditValue(ByVal context As ITypeDescriptorContext, ByVal provider As IServiceProvider, ByVal value As Object) As Object
-			editorService = DirectCast(provider.GetService(GetType(IWindowsFormsEditorService)), IWindowsFormsEditorService)
-			Dim seriesView = TryCast(context.Instance, SeriesViewBaseModel)
+    Public Class CustomColorizerEditor
+        Inherits UITypeEditor
 
-			Dim colorizers As List(Of ChartColorizerBase) = GetColorizers()
+        Private editorService As IWindowsFormsEditorService
 
-			Dim modelProvider As New CustomModelProvider()
-			modelProvider.RegisterCustomModelType(GetType(CustomChartElementModel.Form1.CustomPointColorizer), GetType(CustomChartElementModel.Form1.CustomPointColorizerModel))
+        Public Overrides Function EditValue(ByVal context As ITypeDescriptorContext, ByVal provider As IServiceProvider, ByVal value As Object) As Object
+            editorService = CType(provider.GetService(GetType(IWindowsFormsEditorService)), IWindowsFormsEditorService)
+            Dim seriesView = TryCast(context.Instance, SeriesViewBaseModel)
+            Dim colorizers As List(Of ChartColorizerBase) = GetColorizers()
+            Dim modelProvider As CustomModelProvider = New CustomModelProvider()
+            modelProvider.RegisterCustomModelType(GetType(CustomPointColorizer), GetType(CustomPointColorizerModel))
+            Dim listBox = New ListBoxControl()
+            AddHandler listBox.Click, AddressOf listBox_Click
+            listBox.Items.Add("(None)")
+            For Each colorizer As ChartColorizerBase In colorizers
+                Dim colorizerModel = ModelHelper.GetModel(Of ChartColorizerBaseModel)(colorizer, modelProvider)
+                Dim index As Integer = listBox.Items.Add(colorizerModel)
+                If value IsNot Nothing AndAlso colorizerModel.GetType() Is value.GetType() Then
+                    listBox.SelectedIndex = index
+                End If
+            Next
 
-			Dim listBox = New ListBoxControl()
-			AddHandler listBox.Click, AddressOf listBox_Click
-			listBox.Items.Add("(None)")
-			For Each colorizer As ChartColorizerBase In colorizers
-				Dim colorizerModel = ModelHelper.GetModel(Of ChartColorizerBaseModel)(colorizer, modelProvider)
-				Dim index As Integer = listBox.Items.Add(colorizerModel)
-				If value IsNot Nothing AndAlso colorizerModel.GetType() Is value.GetType() Then
-					listBox.SelectedIndex = index
-				End If
-			Next colorizer
-			editorService.DropDownControl(listBox)
-			If listBox.SelectedIndex <> 0 Then
-				If value Is Nothing OrElse listBox.SelectedItem.GetType() IsNot value.GetType() Then
-					Return listBox.SelectedItem
-				Else
-					Return value
-				End If
-			Else
-				Return Nothing
-			End If
-		End Function
-		Private Sub listBox_Click(ByVal sender As Object, ByVal e As EventArgs)
-			Me.editorService.CloseDropDown()
-		End Sub
-		Private Function GetColorizers() As List(Of ChartColorizerBase)
-			Return New List(Of ChartColorizerBase)() From {
-				New CustomChartElementModel.Form1.CustomPointColorizer(),
-				New KeyColorColorizer(),
-				New RangeColorizer()
-			}
-		End Function
-		Public Overrides Function GetEditStyle(ByVal context As ITypeDescriptorContext) As UITypeEditorEditStyle
-			Return UITypeEditorEditStyle.DropDown
-		End Function
-	End Class
+            editorService.DropDownControl(listBox)
+            If listBox.SelectedIndex <> 0 Then
+                If value Is Nothing OrElse listBox.SelectedItem.GetType() IsNot value.GetType() Then
+                    Return listBox.SelectedItem
+                Else
+                    Return value
+                End If
+            Else
+                Return Nothing
+            End If
+        End Function
+
+        Private Sub listBox_Click(ByVal sender As Object, ByVal e As EventArgs)
+            editorService.CloseDropDown()
+        End Sub
+
+        Private Function GetColorizers() As List(Of ChartColorizerBase)
+            Return New List(Of ChartColorizerBase)() From {New CustomPointColorizer(), New KeyColorColorizer(), New RangeColorizer()}
+        End Function
+
+        Public Overrides Function GetEditStyle(ByVal context As ITypeDescriptorContext) As UITypeEditorEditStyle
+            Return UITypeEditorEditStyle.DropDown
+        End Function
+    End Class
 End Namespace
